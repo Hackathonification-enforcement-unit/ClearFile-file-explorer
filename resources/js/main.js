@@ -5,6 +5,7 @@ let gravityStrength = 0.5; // Adjust the gravity strength here
 let files = [];
 let draggingFile = null;
 let dragOffset = { x: 0, y: 0 }; // Offset of the mouse when dragging
+let isDragging = false; // Flag to check if dragging is occurring
 
 document.addEventListener('DOMContentLoaded', () => {
     loadFilesFromDirectory(NL_PATH); // Load files when the app starts
@@ -78,7 +79,7 @@ function createFileElement(entry, index, parentPath) {
     // Handle file dragging
     fileElement.addEventListener('mousedown', function (event) {
         draggingFile = fileElement;
-        falling = false;
+        isDragging = true; // Set dragging flag to true
 
         // Calculate the offset of the mouse within the file
         dragOffset.x = event.clientX - fileElement.getBoundingClientRect().left;
@@ -88,15 +89,16 @@ function createFileElement(entry, index, parentPath) {
     });
 
     document.addEventListener('mousemove', function (event) {
-        if (draggingFile === fileElement) { // Only move the file that is being dragged
+        if (isDragging) { // Only move the file if dragging
             moveFile(event.pageX, event.pageY);
         }
     });
 
     document.addEventListener('mouseup', function () {
-        if (draggingFile === fileElement) { // Only stop dragging the correct file
+        if (isDragging) { // Only stop dragging if dragging
             draggingFile.classList.remove('dragging');
             draggingFile = null;
+            isDragging = false; // Reset dragging flag
             falling = true;
         }
     });
@@ -120,13 +122,15 @@ function createFileElement(entry, index, parentPath) {
 
     // Handle file or folder click
     fileElement.addEventListener('click', async function () {
-        const fullPath = `${parentPath}/${entry.entry}`;
-        if (entry.type === 'DIRECTORY') {
-            loadFilesFromDirectory(fullPath); // Open folder
-        } else if (entry.type === 'FILE') {
-            const content = await Neutralino.filesystem.readFile(fullPath);
-            await Neutralino.os.execCommand(`xdg-open ${fullPath}`, { background: true });
-            /* alert(`Content of ${entry.entry}:\n${content}`); // Open and show file content (or you can handle this differently) */
+        if (!isDragging) { // Open file only if not dragging
+            const fullPath = `${parentPath}/${entry.entry}`;
+            if (entry.type === 'DIRECTORY') {
+                loadFilesFromDirectory(fullPath); // Open folder
+            } else if (entry.type === 'FILE') {
+                const content = await Neutralino.filesystem.readFile(fullPath);
+                await Neutralino.os.execCommand(`xdg-open ${fullPath}`, { background: true });
+                /* alert(`Content of ${entry.entry}:\n${content}`); // Open and show file content (or you can handle this differently) */
+            }
         }
     });
 
@@ -180,6 +184,7 @@ function isColliding(rect1, rect2) {
 Neutralino.events.on("windowClose", () => {
     Neutralino.app.exit();
 });
+
 
 
 document.getElementById('homeBtn').addEventListener('click', () => {
