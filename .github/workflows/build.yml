@@ -21,8 +21,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install netralino
+      - name: Install neutralino
         run: npm install -g @neutralinojs/neu
 
       - name: Build
         run: neu build --release
+
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            name: neutralino-build
+            path: dist
