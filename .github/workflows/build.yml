@@ -27,8 +27,8 @@ jobs:
       - name: Build
         run: neu build --release
 
-        - name: Upload artifacts
-          uses: actions/upload-artifact@v2
-          with:
-            name: neutralino-build
-            path: dist
+      - name: Upload artifacts
+         uses: actions/upload-artifact@v2
+         with:
+           name: neutralino-build
+           path: dist
