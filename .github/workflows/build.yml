@@ -21,5 +21,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install netralino
+        run: npm install -g @neutralinojs/neu
+
       - name: Build
         run: neu build --release
