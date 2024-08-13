@@ -33,6 +33,17 @@ nav .nav-links {
     display: flex;
 }
 
+nav .nav-links a .nav-link {
+    background-color: #5e5d5d;
+    border-radius: 7px;
+    width: 35px;
+    height: 35px;
+    margin-top: -3px;
+    margin-bottom: -3px;
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
 nav .nav-links a {
     color: #fff;
     text-decoration: none;
