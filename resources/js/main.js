@@ -12,21 +12,21 @@ let isDragging = false; // Chat, are we dragging rn?
 const oscillationFrequency = 0.005; 
 const oscillationAmplitude = 5; 
 
-
-
+let currentPath = NL_CWD;
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadFilesFromDirectory(NL_CWD); // Load da files when the app starts
+    loadFilesFromDirectory(currentPath); // Load da files when the app starts
 });
 
-let currentPath = NL_CWD;
 function updatePath() {
-    const path = document.getElementById('path').textContent = currentPath;
-    path.innerHTML = currentPath;
+    const path = document.getElementById('path');
+    path.innerText = currentPath;
 }
 updatePath()
 async function loadFilesFromDirectory(path) {
     currentPath = path;
+
+    updatePath()
 
     try {
         const directory = await Neutralino.filesystem.readDirectory(path);
@@ -98,7 +98,6 @@ async function createFileElement(entry, index, parentPath) {
     }, 20);
 
     fileElement.addEventListener('mousedown', (event) => {
-        window.getSelection().removeAllRanges();
         draggingFile = fileElement;
         isDragging = true;
 
@@ -109,14 +108,12 @@ async function createFileElement(entry, index, parentPath) {
     });
 
     document.addEventListener('mousemove', (event) => {
-        window.getSelection().removeAllRanges();
         if (isDragging) {
             moveFile(event.pageX, event.pageY);
         }
     });
 
     document.addEventListener('mouseup', () => {
-        window.getSelection().removeAllRanges();
         if (isDragging) {
             setTimeout(() => {
                 if (draggingFile) draggingFile.classList.remove('dragging');
@@ -344,7 +341,7 @@ async function monitorWindowPosition() {
 
     setInterval(async () => {
         try {
-            let currentPosition = await getWindowPosition();
+            const currentPosition = await getWindowPosition();
 
             if (currentPosition.x !== previousPosition.x || currentPosition.y !== previousPosition.y) {
                 debouncedHandleWindowPositionChange();
