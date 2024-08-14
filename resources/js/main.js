@@ -15,7 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let currentPath = NL_CWD;
-
+function updatePath() {
+    const path = document.getElementById('path').textContent = currentPath;
+    path.innerHTML = currentPath;
+}
+updatePath()
 async function loadFilesFromDirectory(path) {
     currentPath = path;
 
@@ -178,15 +182,21 @@ function applyGravity(file) {
 async function getFolderSize(path) {
     const directory = await Neutralino.filesystem.readDirectory(path);
     let totalSize = 0;
-
+    let loops = 0;
     for (const entry of directory) {
-        const fullPath = `${path}/${entry.entry}`;
+        loops++;
+        if (loops > 500) break;
+        try{
+            const fullPath = `${path}/${entry.entry}`;
         if (entry.type === 'DIRECTORY') {
             totalSize += await getFolderSize(fullPath);
         } else if (entry.type === 'FILE') {
             const stats = await Neutralino.filesystem.getStats(fullPath);
             totalSize += stats.size;
         }
+    }catch(err){
+        console.log(err);
+    }
     }
 
     return totalSize;
@@ -281,7 +291,7 @@ document.getElementById('createFileBtn').addEventListener('click', async () => {
 
 document.getElementById('backBtn').addEventListener('click', () => {
     if (currentPath === '/') return alert('You are already at the root folder!');
-
+    updatePath()
     let prevPath = currentPath.split('/')
     prevPath.pop()
     prevPath = prevPath.join('/')
