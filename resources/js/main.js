@@ -1,7 +1,7 @@
 // Spaghetti code management LLC
 Neutralino.init();
 
-const gravityStrength = 0.5; // la gravity lesgoski spped
+const gravityStrength = 5; // la gravity lesgoski speed
 const files = [];
 const sizes = [];
 let offset = 0;
@@ -9,6 +9,11 @@ let multiplier = 0;
 let draggingFile = null;
 const dragOffset = { x: 0, y: 0 }; // Offset of the mouse when dragging stuff around
 let isDragging = false; // Chat, are we dragging rn?
+const oscillationFrequency = 0.005; 
+const oscillationAmplitude = 5; 
+
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
     loadFilesFromDirectory(NL_CWD); // Load da files when the app starts
@@ -162,23 +167,34 @@ async function createFileElement(entry, index, parentPath) {
     });
 }
 
-function applyGravity(file) {
+function applyGravity(file, timestamp) {
     if (file && !isDragging) {
         const targetY = Number.parseFloat(file.dataset.targetY);
         const currentTop = Number.parseFloat(file.style.top || '0');
 
-        if (Math.abs(currentTop - targetY) <= gravityStrength) {
-            file.style.top = `${targetY}px`;
+        // Sine wave oscillation effect
+        const oscillation = oscillationAmplitude * Math.sin(oscillationFrequency * timestamp);
+
+        if (Math.abs(currentTop - (targetY + oscillation)) <= gravityStrength) {
+            file.style.top = `${targetY + oscillation}px`;
         } else {
             const step = gravityStrength;
-            if (currentTop < targetY) {
-                file.style.top = `${Math.min(currentTop + step, targetY)}px`;
+            if (currentTop < targetY + oscillation) {
+                file.style.top = `${Math.min(currentTop + step, targetY + oscillation)}px`;
             } else {
-                file.style.top = `${Math.max(currentTop - step, targetY)}px`;
+                file.style.top = `${Math.max(currentTop - step, targetY + oscillation)}px`;
             }
         }
     }
 }
+
+setInterval(() => {
+    const timestamp = performance.now();
+    for (const file of files) {
+        applyGravity(file, timestamp);
+    }
+}, 20);
+
 
 async function getFolderSize(path) {
     const directory = await Neutralino.filesystem.readDirectory(path);
