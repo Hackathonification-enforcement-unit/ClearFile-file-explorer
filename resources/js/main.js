@@ -3,7 +3,7 @@ Neutralino.init();
 
 const gravityStrength = 0.5; // la gravity lesgoski spped
 const files = [];
-let sizes = [];
+const sizes = [];
 let offset = 0;
 let multiplier = 0;
 let draggingFile = null;
@@ -43,8 +43,8 @@ function calculateOffset() {
     if (sizes.length === 0) return;
     const container = document.getElementById('browserContainer');
     offset = Math.min(...sizes);
-    let highestItem = Math.max(...sizes);
-    let screenHeight = container.offsetHeight-100
+    const highestItem = Math.max(...sizes);
+    const screenHeight = container.offsetHeight-100
     multiplier = (screenHeight / (highestItem - offset));
 }
 
@@ -83,7 +83,9 @@ async function createFileElement(entry, index, parentPath) {
 
     // Apply gravity
     setInterval(() => {
-        files.forEach(file => applyGravity(file));
+        for (const file of files) {
+            applyGravity(file)
+        }
     }, 20);
 
     fileElement.addEventListener('mousedown', (event) => {
@@ -157,8 +159,8 @@ async function createFileElement(entry, index, parentPath) {
 
 function applyGravity(file) {
     if (file && !isDragging) {
-        const targetY = parseFloat(file.dataset.targetY);
-        const currentTop = parseFloat(file.style.top || '0');
+        const targetY = Number.parseFloat(file.dataset.targetY);
+        const currentTop = Number.parseFloat(file.style.top || '0');
 
         if (Math.abs(currentTop - targetY) <= gravityStrength) {
             file.style.top = `${targetY}px`;
