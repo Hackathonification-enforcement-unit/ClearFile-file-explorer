@@ -149,8 +149,7 @@ async function createFileElement(entry, index, parentPath) {
         if (entry.type === 'DIRECTORY') {
             loadFilesFromDirectory(fullPath);
         } else if (entry.type === 'FILE') {
-            const content = await Neutralino.filesystem.readFile(fullPath);
-            await Neutralino.os.execCommand(`xdg-open ${fullPath}`, { background: true });
+            await Neutralino.os.open(`file://${currentPath}/${entry.entry}`)
         }
     });
 
