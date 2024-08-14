@@ -11,10 +11,10 @@ const dragOffset = { x: 0, y: 0 }; // Offset of the mouse when dragging stuff ar
 let isDragging = false; // Chat, are we dragging rn?
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadFilesFromDirectory(NL_PATH); // Load da files when the app starts
+    loadFilesFromDirectory(NL_CWD); // Load da files when the app starts
 });
 
-let currentPath = NL_PATH;
+let currentPath = NL_CWD;
 
 async function loadFilesFromDirectory(path) {
     currentPath = path;
@@ -206,7 +206,7 @@ Neutralino.events.on("windowClose", () => {
 });
 
 document.getElementById('homeBtn').addEventListener('click', () => {
-    loadFilesFromDirectory(NL_PATH);
+    loadFilesFromDirectory(NL_CWD);
 });
 
 document.getElementById('refreshBtn').addEventListener('click', () => {
@@ -277,4 +277,14 @@ document.getElementById('createFileBtn').addEventListener('click', async () => {
     createFileElement(files[fileIndex], fileIndex, currentPath)
 
     closeModal()
+})
+
+document.getElementById('backBtn').addEventListener('click', () => {
+    if (currentPath === '/') return alert('You are already at the root folder!');
+
+    let prevPath = currentPath.split('/')
+    prevPath.pop()
+    prevPath = prevPath.join('/')
+
+    loadFilesFromDirectory(prevPath)
 })
