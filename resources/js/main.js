@@ -228,19 +228,13 @@ document.getElementById('newFileBtn').addEventListener('click', () => {
 function closeModal() {
     document.getElementById('folderModal').style.display = 'none';
     document.getElementById('fileModal').style.display = 'none';
+
+    document.getElementById('folderName').value = '';
+    document.getElementById('fileName').value = '';
 }
 
-document.getElementById('cancelFolderBtn').addEventListener('click', () => {
-    console.log('a')
-    document.getElementById('folderName').value = '';
-
-    closeModal()
-})
-document.getElementById('cancelFileBtn').addEventListener('click', () => {
-    document.getElementById('fileName').value = '';
-
-    closeModal()
-})
+document.getElementById('cancelFolderBtn').addEventListener('click', closeModal)
+document.getElementById('cancelFileBtn').addEventListener('click', closeModal)
 
 document.getElementById('createFolderBtn').addEventListener('click', async () => {
     const folderName = document.getElementById('folderName').value || "newFolder"
