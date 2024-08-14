@@ -37,7 +37,7 @@ async function loadFilesFromDirectory(path) {
         });
 
         calculateOffset();
-        
+
     } catch (error) {
         console.error('Failed to load files:', error);
     }
@@ -48,7 +48,7 @@ function calculateOffset() {
     const container = document.getElementById('browserContainer');
     offset = Math.min(...sizes);
     const highestItem = Math.max(...sizes);
-    const screenHeight = container.offsetHeight-100
+    const screenHeight = container.offsetHeight - 100
     multiplier = (screenHeight / (highestItem - offset));
 }
 
@@ -138,6 +138,7 @@ async function createFileElement(entry, index, parentPath) {
     fileElement.ondragstart = () => false;
 
     fileElement.addEventListener('dblclick', async () => {
+        updatePath()
         window.getSelection().removeAllRanges();
         const fullPath = `${parentPath}/${entry.entry}`;
         if (entry.type === 'DIRECTORY') {
@@ -186,17 +187,17 @@ async function getFolderSize(path) {
     for (const entry of directory) {
         loops++;
         if (loops > 500) break;
-        try{
+        try {
             const fullPath = `${path}/${entry.entry}`;
-        if (entry.type === 'DIRECTORY') {
-            totalSize += await getFolderSize(fullPath);
-        } else if (entry.type === 'FILE') {
-            const stats = await Neutralino.filesystem.getStats(fullPath);
-            totalSize += stats.size;
+            if (entry.type === 'DIRECTORY') {
+                totalSize += await getFolderSize(fullPath);
+            } else if (entry.type === 'FILE') {
+                const stats = await Neutralino.filesystem.getStats(fullPath);
+                totalSize += stats.size;
+            }
+        } catch (err) {
+            console.log(err);
         }
-    }catch(err){
-        console.log(err);
-    }
     }
 
     return totalSize;
@@ -298,3 +299,48 @@ document.getElementById('backBtn').addEventListener('click', () => {
 
     loadFilesFromDirectory(prevPath)
 })
+
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+// Function to get the current window position
+function getWindowPosition() {
+    return Neutralino.window.getPosition();  
+}
+
+
+async function handleWindowPositionChange() {
+    try {
+        document.getElementById('browserContainer').innerHTML = ''; 
+        await loadFilesFromDirectory(currentPath); 
+    } catch (error) {
+        console.error('Error during position change handling:', error);
+    }
+}
+
+// Debounced function to handle updates
+const debouncedHandleWindowPositionChange = debounce(handleWindowPositionChange, 500); 
+async function monitorWindowPosition() {
+    let previousPosition = await getWindowPosition();
+
+    setInterval(async () => {
+        try {
+            let currentPosition = await getWindowPosition();
+
+            if (currentPosition.x !== previousPosition.x || currentPosition.y !== previousPosition.y) {
+                debouncedHandleWindowPositionChange();
+                previousPosition = currentPosition;
+            }
+        } catch (error) {
+            console.error('Error getting window position:', error);
+        }
+    }, 100);
+}
+
+// Start monitoring
+monitorWindowPosition();
+
