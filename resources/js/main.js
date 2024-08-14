@@ -109,6 +109,7 @@ async function createFileElement(entry, index, parentPath) {
         if (isDragging) {
             setTimeout(() => {
                 if (draggingFile) draggingFile.classList.remove('dragging');
+                applyGravity(draggingFile)
                 draggingFile = null;
                 isDragging = false;
 
@@ -215,6 +216,63 @@ document.getElementById('aboutBtn').addEventListener('click', () => {
     alert('This is a Gravity File Browser app with a gravity effect on files!');
 });
 
-document.getElementById('newFolderBtn').addEventListener('click', async () => {
-    // Handle new folder creation
-});
+document.getElementById('newFolderBtn').addEventListener('click', () => {
+    document.getElementById('folderModal').style.display = 'flex'
+    document.getElementById('folderName').focus()
+})
+
+document.getElementById('newFileBtn').addEventListener('click', () => {
+    document.getElementById('fileModal').style.display = 'flex'
+    document.getElementById('fileName').focus()
+})
+
+function closeModal() {
+    document.getElementById('folderModal').style.display = 'none';
+    document.getElementById('fileModal').style.display = 'none';
+
+    document.getElementById('folderName').value = '';
+    document.getElementById('fileName').value = '';
+}
+
+document.getElementById('cancelFolderBtn').addEventListener('click', closeModal)
+document.getElementById('cancelFileBtn').addEventListener('click', closeModal)
+
+document.getElementById('createFolderBtn').addEventListener('click', async () => {
+    const folderName = document.getElementById('folderName').value || "newFolder"
+
+    const oldFiles = await Neutralino.filesystem.readDirectory(currentPath)
+
+    if (oldFiles.find(file => file.entry === folderName)) {
+        return alert('A folder with this name already exists');
+    }
+
+    Neutralino.filesystem.createDirectory(`${currentPath}/${folderName}`)
+
+    const files = await Neutralino.filesystem.readDirectory(currentPath)
+
+    const fileIndex = files.findIndex(file => file.entry === folderName)
+
+    createFileElement(files[fileIndex], fileIndex, currentPath)
+
+    closeModal()
+})
+
+document.getElementById('createFileBtn').addEventListener('click', async () => {
+    const fileName = document.getElementById('fileName').value || "newFile.txt"
+
+    const oldFiles = await Neutralino.filesystem.readDirectory(currentPath)
+
+    if (oldFiles.find(file => file.entry === fileName)) {
+        return alert('A file with this name already exists');
+    }
+
+    Neutralino.filesystem.appendFile(`${currentPath}/${fileName}`, '')
+
+    const files = await Neutralino.filesystem.readDirectory(currentPath)
+
+    const fileIndex = files.findIndex(file => file.entry === fileName)
+
+    createFileElement(files[fileIndex], fileIndex, currentPath)
+
+    closeModal()
+})
