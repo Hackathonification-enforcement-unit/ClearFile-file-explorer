@@ -105,7 +105,7 @@ function createFileElement(entry, index, parentPath) {
         window.getSelection().removeAllRanges()
         if (isDragging) { // Only stop dragging if dragging
             setTimeout(() => {
-                draggingFile.classList.remove('dragging');
+                if (draggingFile) draggingFile.classList.remove('dragging');
                 draggingFile = null;
                 isDragging = false; // Reset dragging flag
                 falling = true;
