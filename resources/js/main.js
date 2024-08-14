@@ -41,11 +41,11 @@ async function loadFilesFromDirectory(path) {
 
 function calculateOffset() {
     if (sizes.length === 0) return;
-
+    const container = document.getElementById('browserContainer');
     offset = Math.min(...sizes);
     let highestItem = Math.max(...sizes);
-    let screenHeight = window.innerHeight;
-    multiplier = screenHeight / (highestItem - offset);
+    let screenHeight = container.offsetHeight-100
+    multiplier = (screenHeight / (highestItem - offset));
 }
 
 async function createFileElement(entry, index, parentPath) {
@@ -78,7 +78,7 @@ async function createFileElement(entry, index, parentPath) {
     calculateOffset();
 
     // Update target Y position based on size
-    const targetY = (size - offset) * multiplier;
+    const targetY = ((size - offset) * multiplier);
     fileElement.dataset.targetY = targetY;
 
     // Apply gravity
