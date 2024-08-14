@@ -1,17 +1,21 @@
 // Load Neutralino configuration and set up basic events
 Neutralino.init();
 
-let gravityStrength = 0.5; // Adjust the gravity strength here
-let files = [];
+const gravityStrength = 0.5; // Adjust the gravity strength here
+const files = [];
 let draggingFile = null;
-let dragOffset = { x: 0, y: 0 }; // Offset of the mouse when dragging
+const dragOffset = { x: 0, y: 0 }; // Offset of the mouse when dragging
 let isDragging = false; // Flag to check if dragging is occurring
 
 document.addEventListener('DOMContentLoaded', () => {
     loadFilesFromDirectory(NL_PATH); // Load files when the app starts
 });
 
+let currentPath = NL_PATH;
+
 async function loadFilesFromDirectory(path) {
+    currentPath = path;
+
     try {
         // Use Neutralino's filesystem API to read the contents of a directory
         const directory = await Neutralino.filesystem.readDirectory(path);
@@ -33,7 +37,7 @@ function createFileElement(entry, index, parentPath) {
     const container = document.getElementById('browserContainer');
 
     // Create the file element
-    let fileElement = document.createElement('div');
+    const fileElement = document.createElement('div');
     fileElement.className = 'file';
     fileElement.style.top = `${20 + index * 20}px`;
     fileElement.style.left = `${20 + index * 130}px`;
@@ -46,38 +50,40 @@ function createFileElement(entry, index, parentPath) {
     let falling = true;
 
     // Apply gravity
-    function applyGravity() {
-        if (falling && draggingFile !== fileElement) { // Apply gravity only if not dragging this file
+    function applyGravity(file = fileElement) {
+        if (falling && draggingFile !== file) { // Apply gravity only if not dragging this file
             speed += gravityStrength;
-            const fileRect = fileElement.getBoundingClientRect();
+            
+            const fileRect = file.getBoundingClientRect();
             const containerRect = container.getBoundingClientRect();
 
             if (fileRect.bottom + speed >= containerRect.bottom) {
-                fileElement.style.top = `${containerRect.height - fileRect.height}px`;
+                file.style.top = `${containerRect.height - fileRect.height}px`;
                 speed = 0;
                 falling = false;
             } else {
-                fileElement.style.top = `${fileElement.offsetTop + speed}px`;
+                file.style.top = `${file.offsetTop + speed}px`;
             }
 
             // Check for collisions with other files
-            files.forEach(otherFile => {
-                if (otherFile !== fileElement) {
+            for (const otherFile of files) {
+                if (otherFile !== file) {
                     const otherRect = otherFile.getBoundingClientRect();
                     if (isColliding(fileRect, otherRect)) {
-                        fileElement.style.top = `${otherFile.offsetTop - fileRect.height}px`;
+                        file.style.top = `${otherFile.offsetTop - fileRect.height}px`;
                         speed = 0;
                         falling = false;
                     }
                 }
-            });
+            }
         }
     }
 
     setInterval(applyGravity, 20);
 
     // Handle file dragging
-    fileElement.addEventListener('mousedown', function (event) {
+    fileElement.addEventListener('mousedown', (event) => {
+        window.getSelection().removeAllRanges()
         draggingFile = fileElement;
         isDragging = true; // Set dragging flag to true
 
@@ -88,18 +94,24 @@ function createFileElement(entry, index, parentPath) {
         fileElement.classList.add('dragging');
     });
 
-    document.addEventListener('mousemove', function (event) {
+    document.addEventListener('mousemove', (event) => {
+        window.getSelection().removeAllRanges()
         if (isDragging) { // Only move the file if dragging
             moveFile(event.pageX, event.pageY);
         }
     });
 
-    document.addEventListener('mouseup', function () {
+    document.addEventListener('mouseup', () => {
+        window.getSelection().removeAllRanges()
         if (isDragging) { // Only stop dragging if dragging
-            draggingFile.classList.remove('dragging');
-            draggingFile = null;
-            isDragging = false; // Reset dragging flag
-            falling = true;
+            setTimeout(() => {
+                draggingFile.classList.remove('dragging');
+                draggingFile = null;
+                isDragging = false; // Reset dragging flag
+                falling = true;
+
+                applyGravity(draggingFile)
+            }, 1)
         }
     });
 
@@ -108,21 +120,22 @@ function createFileElement(entry, index, parentPath) {
             const containerRect = container.getBoundingClientRect();
 
             // Ensure the dragged file stays within the container bounds
-            let newLeft = Math.min(Math.max(0, pageX - containerRect.left - dragOffset.x), containerRect.width - draggingFile.offsetWidth);
-            let newTop = Math.min(Math.max(0, pageY - containerRect.top - dragOffset.y), containerRect.height - draggingFile.offsetHeight);
+            const newLeft = Math.min(Math.max(0, pageX - containerRect.left - dragOffset.x), containerRect.width - draggingFile.offsetWidth);
+            const newTop = Math.min(Math.max(0, pageY - containerRect.top - dragOffset.y), containerRect.height - draggingFile.offsetHeight);
 
             draggingFile.style.left = `${newLeft}px`;
             draggingFile.style.top = `${newTop}px`;
         }
     }
 
-    fileElement.ondragstart = function () {
-        return false;
+    fileElement.ondragstart = () => {
+        return false
     };
 
     // Handle file or folder click
-    fileElement.addEventListener('click', async function () {
-        if (!isDragging) { // Open file only if not dragging
+    fileElement.addEventListener('dblclick', async () => {
+        window.getSelection().removeAllRanges()
+        // if (!isDragging) { // Open file only if not dragging
             const fullPath = `${parentPath}/${entry.entry}`;
             if (entry.type === 'DIRECTORY') {
                 loadFilesFromDirectory(fullPath); // Open folder
@@ -131,11 +144,11 @@ function createFileElement(entry, index, parentPath) {
                 await Neutralino.os.execCommand(`xdg-open ${fullPath}`, { background: true });
                 /* alert(`Content of ${entry.entry}:\n${content}`); // Open and show file content (or you can handle this differently) */
             }
-        }
+        // }
     });
 
     // Get size and display it
-    fileElement.addEventListener('contextmenu', async function (event) {
+    fileElement.addEventListener('contextmenu', async (event) => {
         event.preventDefault(); // Prevent the default context menu
         const fullPath = `${parentPath}/${entry.entry}`;
         if (entry.type === 'DIRECTORY') {
@@ -171,7 +184,7 @@ function formatBytes(bytes, decimals = 2) {
     const dm = decimals < 0 ? 0 : decimals;
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    return `${Number.parseFloat((bytes / (k ** i)).toFixed(dm))} ${sizes[i]}`;
 }
 
 function isColliding(rect1, rect2) {
@@ -189,14 +202,14 @@ Neutralino.events.on("windowClose", () => {
 
 document.getElementById('homeBtn').addEventListener('click', () => {
     // Handle home button action
-    alert('Home clicked!');
+    loadFilesFromDirectory(NL_PATH);
     // You could reload the root directory or perform any home action
 });
 
 document.getElementById('refreshBtn').addEventListener('click', () => {
     // Handle refresh button action
     document.getElementById('browserContainer').innerHTML = ''; // Clear current view
-    loadFilesFromDirectory(NL_PATH); // Reload the files from the root directory
+    loadFilesFromDirectory(currentPath); // Reload the files from the root directory
 });
 
 document.getElementById('aboutBtn').addEventListener('click', () => {
@@ -204,3 +217,9 @@ document.getElementById('aboutBtn').addEventListener('click', () => {
     alert('This is a Gravity File Browser app with a gravity effect on files!');
     // You could show an about dialog or page
 });
+
+document.getElementById('newFolderBtn').addEventListener('click', async () => {
+    
+
+    const directory = await Neutralino.filesystem.readDirectory(path);
+})

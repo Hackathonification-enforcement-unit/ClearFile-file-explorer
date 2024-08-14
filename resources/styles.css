@@ -33,6 +33,14 @@ nav .nav-links {
     display: flex;
 }
 
+nav .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1em;
+    transition: color 0.3s;
+}
+
 nav .nav-links a .nav-link {
     background-color: #5e5d5d;
     border-radius: 7px;
@@ -44,12 +52,9 @@ nav .nav-links a .nav-link {
     margin-right: -5px;
 }
 
-nav .nav-links a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 1em;
-    transition: color 0.3s;
+nav .nav-links a .nav-link .home-btn-icon {
+    width: 35px;
+    height: 35px;
 }
 
 nav .nav-links a:hover {
