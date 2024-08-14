@@ -83,7 +83,6 @@ function createFileElement(entry, index, parentPath) {
 
     // Handle file dragging
     fileElement.addEventListener('mousedown', (event) => {
-        window.getSelection().removeAllRanges()
         draggingFile = fileElement;
         isDragging = true; // Set dragging flag to true
 
@@ -95,14 +94,12 @@ function createFileElement(entry, index, parentPath) {
     });
 
     document.addEventListener('mousemove', (event) => {
-        window.getSelection().removeAllRanges()
         if (isDragging) { // Only move the file if dragging
             moveFile(event.pageX, event.pageY);
         }
     });
 
     document.addEventListener('mouseup', () => {
-        window.getSelection().removeAllRanges()
         if (isDragging) { // Only stop dragging if dragging
             setTimeout(() => {
                 if (draggingFile) draggingFile.classList.remove('dragging');
@@ -218,8 +215,69 @@ document.getElementById('aboutBtn').addEventListener('click', () => {
     // You could show an about dialog or page
 });
 
-document.getElementById('newFolderBtn').addEventListener('click', async () => {
-    
+document.getElementById('newFolderBtn').addEventListener('click', () => {
+    document.getElementById('folderModal').style.display = 'flex'
+    document.getElementById('folderName').focus()
+})
 
-    const directory = await Neutralino.filesystem.readDirectory(path);
+document.getElementById('newFileBtn').addEventListener('click', () => {
+    document.getElementById('fileModal').style.display = 'flex'
+    document.getElementById('fileName').focus()
+})
+
+function closeModal() {
+    document.getElementById('folderModal').style.display = 'none';
+    document.getElementById('fileModal').style.display = 'none';
+}
+
+document.getElementById('cancelFolderBtn').addEventListener('click', () => {
+    console.log('a')
+    document.getElementById('folderName').value = '';
+
+    closeModal()
+})
+document.getElementById('cancelFileBtn').addEventListener('click', () => {
+    document.getElementById('fileName').value = '';
+
+    closeModal()
+})
+
+document.getElementById('createFolderBtn').addEventListener('click', async () => {
+    const folderName = document.getElementById('folderName').value || "newFolder"
+
+    const oldFiles = await Neutralino.filesystem.readDirectory(currentPath)
+
+    if (oldFiles.find(file => file.entry === folderName)) {
+        return alert('A folder with this name already exists');
+    }
+
+    Neutralino.filesystem.createDirectory(`${currentPath}/${folderName}`)
+
+    const files = await Neutralino.filesystem.readDirectory(currentPath)
+
+    const fileIndex = files.findIndex(file => file.entry === folderName)
+
+    createFileElement(files[fileIndex], fileIndex, currentPath)
+
+    closeModal()
+})
+
+document.getElementById('createFileBtn').addEventListener('click', async () => {
+    const fileName = document.getElementById('fileName').value || "newFile.txt"
+
+    const oldFiles = await Neutralino.filesystem.readDirectory(currentPath)
+
+    if (oldFiles.find(file => file.entry === fileName)) {
+        return alert('A file with this name already exists');
+    }
+
+    Neutralino.filesystem.appendFile(`${currentPath}/${fileName}`, '')
+
+    const files = await Neutralino.filesystem.readDirectory(currentPath)
+
+    const fileIndex = files.findIndex(file => file.entry === fileName)
+
+    createFileElement(files[fileIndex], fileIndex, currentPath)
+
+    closeModal()
 })
