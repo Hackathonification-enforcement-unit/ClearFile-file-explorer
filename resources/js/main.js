@@ -106,11 +106,11 @@ function createFileElement(entry, index, parentPath) {
         if (isDragging) { // Only stop dragging if dragging
             setTimeout(() => {
                 if (draggingFile) draggingFile.classList.remove('dragging');
+                applyGravity(draggingFile)
                 draggingFile = null;
                 isDragging = false; // Reset dragging flag
                 falling = true;
 
-                applyGravity(draggingFile)
             }, 1)
         }
     });
