@@ -4,7 +4,7 @@
 # Neutralinojs binaries and builds
 
 /dist
-.tmp/*
+/.tmp/*s
 # Neutralinojs client (minified)
 # neutralino.js
 
