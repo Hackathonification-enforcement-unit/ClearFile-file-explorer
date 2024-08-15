@@ -76,13 +76,13 @@ nav .nav-links a:hover {
 
 .file {
     position: absolute;
+    color: #282c34;
     width: 100px;
     height: 100px;
-    background-image: url(https://e1.pngegg.com/pngimages/525/771/png-clipart-next-folders-icon-blank-blue-folder-icon-thumbnail.png);
+    background-image: url('assets/files/folder\ \(file\).png');
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat;
-    background-color: #61dafb;
     border-radius: 5px;
     display: flex;
     align-items: center;
@@ -214,7 +214,7 @@ button:hover {
     margin: 20px;
     width: 100px;
     height: 100px;
-    background-image: url('assets/lewis.jpeg'); /* Placeholder image */
+    background-image: url('assets/lewis.jpeg'); 
     background-size: cover;
     background-repeat: no-repeat;
     cursor: pointer;
