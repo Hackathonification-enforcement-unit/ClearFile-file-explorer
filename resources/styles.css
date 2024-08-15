@@ -228,3 +228,8 @@ button:hover {
     cursor: pointer;
     width: 100%;
 }
+
+.nav-links-icon{
+    max-width: 35px;
+    max-height: 35px;
+}
