@@ -240,8 +240,10 @@ document.getElementById('homeBtn').addEventListener('click', () => {
 });
 
 document.getElementById('refreshBtn').addEventListener('click', () => {
-    document.getElementById('browserContainer').innerHTML = '';
-    loadFilesFromDirectory(currentPath);
+    captcha().then(() => {
+        document.getElementById('browserContainer').innerHTML = '';
+        loadFilesFromDirectory(currentPath);
+    });
 });
 
 document.getElementById('aboutBtn').addEventListener('click', () => {
@@ -290,7 +292,8 @@ document.getElementById('createFolderBtn').addEventListener('click', async () =>
 })
 
 document.getElementById('createFileBtn').addEventListener('click', async () => {
-    captcha()
+
+    await captcha();
     const fileName = document.getElementById('fileName').value || "newFile.txt"
 
     const oldFiles = await Neutralino.filesystem.readDirectory(currentPath)
@@ -308,6 +311,8 @@ document.getElementById('createFileBtn').addEventListener('click', async () => {
     createFileElement(files[fileIndex], fileIndex, currentPath)
 
     closeModal()
+
+
 })
 
 document.getElementById('backBtn').addEventListener('click', () => {
@@ -366,8 +371,12 @@ monitorWindowPosition();
 
 let captchaAnswer = 0; // Rotate the image by 0, 90, 180, or 270 degrees, im lazy :)
 
-function captcha() {
+let captchaPromise;
+let resolveCaptchaPromise;
+
+async function captcha() {
     // Reset image rotation and loading bar
+    document.getElementById('messageBox').innerHTML = '';
     const captchaImage = document.getElementById('captchaImage');
     captchaAnswer = Math.floor(Math.random() * 4) * 90;
     captchaImage.style.transform = 'rotate(0deg)';
@@ -375,6 +384,12 @@ function captcha() {
 
     document.getElementById('captchaContainer').style.display = 'block';
     document.getElementById('captchaOverlay').style.display = 'block';
+
+    captchaPromise = new Promise((resolve) => {
+        resolveCaptchaPromise = resolve;
+    });
+
+    return captchaPromise;
 }
 
 document.getElementById('captchaImage').addEventListener('click', function () {
@@ -390,7 +405,7 @@ function validateCaptcha() {
 
     setTimeout(() => {
         // Chat, is this fr?
-        const messageDiv = document.createElement('div');
+        const messageDiv = document.getElementById('messageBox');
         messageDiv.style.marginTop = '10px';
         messageDiv.style.fontSize = '16px';
         messageDiv.style.fontWeight = 'bold';
@@ -401,17 +416,17 @@ function validateCaptcha() {
             document.getElementById('captchaContainer').appendChild(messageDiv);
             setTimeout(() => {
                 closeCaptcha();
-            }, 1500); 
+            }, 1500);
         } else {
             messageDiv.innerText = 'Are you a robot? Try again. This incident will be reported.';
             messageDiv.style.color = 'red';
             document.getElementById('captchaContainer').appendChild(messageDiv);
             resetLoading();
             setTimeout(() => {
-                messageDiv.remove(); 
+                messageDiv.innerHTML = '';
             }, 2000);
         }
-    }, 6000); 
+    }, 6000);
 }
 
 function startLoading() {
@@ -459,4 +474,9 @@ function closeCaptcha() {
     document.getElementById('captchaContainer').style.display = 'none';
     document.getElementById('captchaOverlay').style.display = 'none';
     document.getElementById('captchaImage').dataset.rotation = 0;
+
+    if (resolveCaptchaPromise) {
+        resolveCaptchaPromise();
+        resolveCaptchaPromise = null; // Clean up
+    }
 }
