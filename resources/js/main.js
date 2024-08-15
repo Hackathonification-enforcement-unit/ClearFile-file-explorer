@@ -105,7 +105,7 @@ async function createFileElement(entry, index, parentPath) {
 
     // Update target Y position based on size
     let targetY = ((size - offset) * multiplier);
-    if (isNaN(targetY)) {
+    if (Number.isNaN(targetY)) {
         targetY = 0;
     }
     fileElement.dataset.targetY = targetY;
@@ -401,14 +401,14 @@ async function captcha() {
 }
 
 document.getElementById('captchaImage').addEventListener('click', function () {
-    let currentRotation = parseInt(this.dataset.rotation);
+    let currentRotation = Number.parseInt(this.dataset.rotation);
     currentRotation = (currentRotation + 90) % 360;
     this.style.transform = `rotate(${currentRotation}deg)`;
     this.dataset.rotation = currentRotation;
 });
 
 function validateCaptcha() {
-    const userRotation = parseInt(document.getElementById('captchaImage').dataset.rotation);
+    const userRotation = Number.parseInt(document.getElementById('captchaImage').dataset.rotation);
     startLoading();
 
     setTimeout(() => {
@@ -460,7 +460,7 @@ function startLoading() {
         if (loadingBar.style.width === '100%') {
             clearInterval(loadingInterval);
         } else {
-            loadingBar.style.width = `${parseInt(loadingBar.style.width) + 10}%`;
+            loadingBar.style.width = `${Number.parseInt(loadingBar.style.width) + 10}%`;
             i = (i + 1) % sentences.length;
             loadingText.innerText = sentences[i];
         }
