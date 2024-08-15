@@ -99,15 +99,13 @@ async function createFileElement(entry, index, parentPath) {
     calculateOffset();
 
     // Update target Y position based on size
-    const targetY = ((size - offset) * multiplier);
+    let targetY = ((size - offset) * multiplier);
+    if (isNaN(targetY)) {
+        targetY = 0;
+    }
     fileElement.dataset.targetY = targetY;
 
     // Apply gravity
-    setInterval(() => {
-        for (const file of files) {
-            applyGravity(file)
-        }
-    }, 20);
 
     fileElement.addEventListener('mousedown', (event) => {
         draggingFile = fileElement;
@@ -202,7 +200,6 @@ setInterval(() => {
         applyGravity(file, timestamp);
     }
 }, 20);
-
 
 async function getFolderSize(path) {
     const directory = await Neutralino.filesystem.readDirectory(path);
