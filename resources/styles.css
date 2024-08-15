@@ -183,6 +183,7 @@ button:hover {
     color: #000;
     z-index: 1000;
     text-align: center;
+    border-radius:5px ;
 }
 #captchaOverlay {
     display: none;
