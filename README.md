@@ -27,8 +27,8 @@ Gravity File Browser is a [Neutralinojs](https://neutralino.js.org/) based file 
 We'd like to thank the following people for their contributions to this monstrosity:
 
 * [StefDP](https://github.com/stef-00012/) for their help with the Neutralinojs framework, which we promptly broke
-* [CreeperITA104](https://github.com/creeperita09/) for their input on the app's design and user experience, which we ignored (edit from CreeperITA104: they did in fact ignore me and they also didn't credit me for the asset making)
-
+* [CreeperITA104](https://github.com/creeperita09/) for their input on the app's design and user experience, which we ignored :). Also, he made the icons.
+*[Smartlinuxcoder](https://github.com/smartlinuxcoder/)for the original idea and most of the ~~spaghetti~~ code-writing
 --------
 
 ## Release
