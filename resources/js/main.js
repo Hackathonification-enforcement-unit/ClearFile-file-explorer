@@ -9,8 +9,8 @@ let multiplier = 0;
 let draggingFile = null;
 const dragOffset = { x: 0, y: 0 }; // Offset of the mouse when dragging stuff around
 let isDragging = false; // Chat, are we dragging rn?
-const oscillationFrequency = 0.005; 
-const oscillationAmplitude = 5; 
+const oscillationFrequency = 0.005;
+const oscillationAmplitude = 5;
 
 
 
@@ -63,7 +63,14 @@ async function createFileElement(entry, index, parentPath) {
     const fileElement = document.createElement('div');
     fileElement.className = 'file';
     fileElement.style.top = `${20 + index * 20}px`;
-    fileElement.style.left = `${20 + index * 130}px`;
+    const minX = 0;  // Minimum x position
+    const maxX = container.clientWidth - fileElement.offsetWidth;  // Maximum x position, considering the element's width
+
+    // Generate a random x position within the range
+    const randomX = Math.random() * (maxX - minX) + minX;
+
+    // Apply the random x position to the element
+    fileElement.style.left = `${randomX}px`;
     fileElement.innerHTML = entry.entry;
 
     container.appendChild(fileElement);
@@ -325,21 +332,21 @@ function debounce(func, wait) {
 }
 // Function to get the current window position
 function getWindowPosition() {
-    return Neutralino.window.getPosition();  
+    return Neutralino.window.getPosition();
 }
 
 
 async function handleWindowPositionChange() {
     try {
-        document.getElementById('browserContainer').innerHTML = ''; 
-        await loadFilesFromDirectory(currentPath); 
+        document.getElementById('browserContainer').innerHTML = '';
+        await loadFilesFromDirectory(currentPath);
     } catch (error) {
         console.error('Error during position change handling:', error);
     }
 }
 
 // Debounced function to handle updates
-const debouncedHandleWindowPositionChange = debounce(handleWindowPositionChange, 500); 
+const debouncedHandleWindowPositionChange = debounce(handleWindowPositionChange, 500);
 async function monitorWindowPosition() {
     let previousPosition = await getWindowPosition();
 
@@ -360,3 +367,6 @@ async function monitorWindowPosition() {
 // Start monitoring
 monitorWindowPosition();
 
+function captcha(){
+    
+}
