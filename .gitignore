@@ -2,9 +2,9 @@
 .lite_workspace.lua
 
 # Neutralinojs binaries and builds
-
+/.tmp
 /dist
-/.tmp/*s
+/.tmp/*
 # Neutralinojs client (minified)
 # neutralino.js
 

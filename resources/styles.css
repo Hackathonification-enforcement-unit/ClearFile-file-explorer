@@ -233,3 +233,15 @@ button:hover {
     max-width: 35px;
     max-height: 35px;
 }
+
+.icon-folder {
+    background-image: url('assets/files/folder.png');
+}
+
+.icon-file {
+    background-image: url('assets/files/file.png');
+}
+
+.icon-locked-folder {
+    background-image: url('assets/files/folder\ \(locked\).png');
+}

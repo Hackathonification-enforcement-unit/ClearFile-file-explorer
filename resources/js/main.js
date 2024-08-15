@@ -79,17 +79,22 @@ async function createFileElement(entry, index, parentPath) {
     const fullPath = `${parentPath}/${entry.entry}`;
     let size = 0;
     if (entry.type === 'DIRECTORY') {
+
+        fileElement.classList.add('icon-folder');
         try {
             size = await getFolderSize(fullPath);
         } catch (error) {
+            fileElement.classList.add('icon-locked-folder');
             console.error(`Failed to get size for ${fullPath}:`, error);
             return;
         }
     } else {
+        fileElement.classList.add('icon-file');
         try {
             const stats = await Neutralino.filesystem.getStats(fullPath);
             size = stats.size;
         } catch (error) {
+            fileElement.classList.add('icon-locked-folder');
             console.error(`Failed to get size for ${fullPath}:`, error);
             return;
         }
