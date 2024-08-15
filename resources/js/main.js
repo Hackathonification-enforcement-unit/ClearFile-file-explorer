@@ -290,6 +290,7 @@ document.getElementById('createFolderBtn').addEventListener('click', async () =>
 })
 
 document.getElementById('createFileBtn').addEventListener('click', async () => {
+    captcha()
     const fileName = document.getElementById('fileName').value || "newFile.txt"
 
     const oldFiles = await Neutralino.filesystem.readDirectory(currentPath)
@@ -363,6 +364,99 @@ async function monitorWindowPosition() {
 // Start monitoring
 monitorWindowPosition();
 
-function captcha(){
-    
+let captchaAnswer = 0; // Rotate the image by 0, 90, 180, or 270 degrees, im lazy :)
+
+function captcha() {
+    // Reset image rotation and loading bar
+    const captchaImage = document.getElementById('captchaImage');
+    captchaAnswer = Math.floor(Math.random() * 4) * 90;
+    captchaImage.style.transform = 'rotate(0deg)';
+    captchaImage.dataset.rotation = 0;
+
+    document.getElementById('captchaContainer').style.display = 'block';
+    document.getElementById('captchaOverlay').style.display = 'block';
+}
+
+document.getElementById('captchaImage').addEventListener('click', function () {
+    let currentRotation = parseInt(this.dataset.rotation);
+    currentRotation = (currentRotation + 90) % 360;
+    this.style.transform = `rotate(${currentRotation}deg)`;
+    this.dataset.rotation = currentRotation;
+});
+
+function validateCaptcha() {
+    const userRotation = parseInt(document.getElementById('captchaImage').dataset.rotation);
+    startLoading();
+
+    setTimeout(() => {
+        // Chat, is this fr?
+        const messageDiv = document.createElement('div');
+        messageDiv.style.marginTop = '10px';
+        messageDiv.style.fontSize = '16px';
+        messageDiv.style.fontWeight = 'bold';
+
+        if (userRotation === captchaAnswer) {
+            messageDiv.innerText = 'Captcha passed, free to go!';
+            messageDiv.style.color = 'green';
+            document.getElementById('captchaContainer').appendChild(messageDiv);
+            setTimeout(() => {
+                closeCaptcha();
+            }, 1500); 
+        } else {
+            messageDiv.innerText = 'Are you a robot? Try again. This incident will be reported.';
+            messageDiv.style.color = 'red';
+            document.getElementById('captchaContainer').appendChild(messageDiv);
+            resetLoading();
+            setTimeout(() => {
+                messageDiv.remove(); 
+            }, 2000);
+        }
+    }, 6000); 
+}
+
+function startLoading() {
+    const loadingBar = document.getElementById('loadingBar');
+    const loadingText = document.getElementById('loadingText');
+    const sentences = [
+        'Observing superposition...',
+        'Calculating formula...',
+        'Simulating space-time...',
+        'Mining bitcoin...',
+        'Analyzing data...',
+        'Hacking into the system...',
+        'Compiling Doom',
+        'Encrypting files...',
+        'Attempting to observe the quantum environment'
+    ];
+    let i = 0;
+    resetLoading()
+    document.getElementById('loadingBarContainer').style.display = 'block';
+    loadingText.innerText = sentences[i];
+
+    const loadingInterval = setInterval(() => {
+        if (loadingBar.style.width === '100%') {
+            clearInterval(loadingInterval);
+        } else {
+            loadingBar.style.width = `${parseInt(loadingBar.style.width) + 10}%`;
+            i = (i + 1) % sentences.length;
+            loadingText.innerText = sentences[i];
+        }
+    }, 500);
+}
+
+function resetLoading() {
+    const loadingBar = document.getElementById('loadingBar');
+    const loadingText = document.getElementById('loadingText');
+
+    loadingBar.style.width = '0';
+    loadingText.innerText = '';
+    document.getElementById('loadingBarContainer').style.display = 'none';
+}
+
+function closeCaptcha() {
+    resetLoading();
+    // Hide the popup and continue execution
+    document.getElementById('captchaContainer').style.display = 'none';
+    document.getElementById('captchaOverlay').style.display = 'none';
+    document.getElementById('captchaImage').dataset.rotation = 0;
 }
