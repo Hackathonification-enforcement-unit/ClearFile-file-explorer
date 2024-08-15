@@ -34,7 +34,7 @@
   },
   "modes": {
     "window": {
-      "title": "neutralino-test",
+      "title": "ClearFile",
       "width": 800,
       "height": 500,
       "minWidth": 800,
@@ -76,7 +76,7 @@
     }
   },
   "cli": {
-    "binaryName": "neutralino-test",
+    "binaryName": "ClearFile file explorer",
     "resourcesPath": "/resources/",
     "extensionsPath": "/extensions/",
     "clientLibrary": "/resources/js/neutralino.js",

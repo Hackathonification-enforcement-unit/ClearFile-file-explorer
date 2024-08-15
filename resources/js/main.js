@@ -86,8 +86,13 @@ async function createFileElement(entry, index, parentPath) {
             return;
         }
     } else {
-        const stats = await Neutralino.filesystem.getStats(fullPath);
-        size = stats.size;
+        try {
+            const stats = await Neutralino.filesystem.getStats(fullPath);
+            size = stats.size;
+        } catch (error) {
+            console.error(`Failed to get size for ${fullPath}:`, error);
+            return;
+        }
     }
 
     sizes.push(size);

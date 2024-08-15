@@ -214,7 +214,7 @@ button:hover {
     margin: 20px;
     width: 100px;
     height: 100px;
-    background-image: url('icons/lewis.jpeg'); /* Placeholder image */
+    background-image: url('assets/lewis.jpeg'); /* Placeholder image */
     background-size: cover;
     background-repeat: no-repeat;
     cursor: pointer;
