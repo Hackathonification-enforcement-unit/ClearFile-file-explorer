@@ -279,6 +279,7 @@ document.getElementById('cancelFolderBtn').addEventListener('click', closeModal)
 document.getElementById('cancelFileBtn').addEventListener('click', closeModal)
 
 document.getElementById('createFolderBtn').addEventListener('click', async () => {
+    await captcha();
     const folderName = document.getElementById('folderName').value || "newFolder"
 
     const oldFiles = await Neutralino.filesystem.readDirectory(currentPath)
