@@ -14,3 +14,5 @@
 
 #appimage
 *.AppImage
+
+node_modules
