@@ -22,6 +22,13 @@ Gravity File Browser is a [Neutralinojs](https://neutralino.js.org/) based file 
 
 --------
 
+# Images
+<details>
+	<summary>Click here</summary>
+
+	
+</details>
+
 ## Credits
 
 We'd like to thank the following people for their contributions to this monstrosity:
