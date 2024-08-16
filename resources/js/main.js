@@ -86,44 +86,6 @@ async function createFileElement(entry, index, parentPath) {
 	container.appendChild(fileElement);
 	files.push(fileElement);
 
-	const fullPath = `${parentPath}/${entry.entry}`;
-	let size = 0;
-
-	if (entry.type === "DIRECTORY") {
-		fileElement.classList.add("icon-folder");
-        
-		try {
-			size = await getFolderSize(fullPath);
-		} catch (error) {
-			fileElement.classList.add("icon-locked-folder");
-			console.error(`Failed to get size for ${fullPath}:`, error);
-			return;
-		}
-	} else {
-		fileElement.classList.add("icon-file");
-
-		try {
-			const stats = await Neutralino.filesystem.getStats(fullPath);
-			size = stats.size;
-		} catch (error) {
-			fileElement.classList.add("icon-locked-folder");
-
-			console.error(`Failed to get size for ${fullPath}:`, error);
-			return;
-		}
-	}
-
-	sizes.push(size);
-	calculateOffset();
-
-	// Update target Y position based on size
-	let targetY = (size - offset) * multiplier;
-
-	if (Number.isNaN(targetY)) {
-		targetY = 0;
-	}
-	fileElement.dataset.targetY = targetY;
-
 	// Apply gravity
 
 	fileElement.addEventListener("mousedown", (event) => {
@@ -204,6 +166,45 @@ async function createFileElement(entry, index, parentPath) {
 			alert(`File size of ${entry.entry}: ${formatBytes(stats.size)}`);
 		}
 	});
+
+	const fullPath = `${parentPath}/${entry.entry}`;
+	let size = 0;
+
+	if (entry.type === "DIRECTORY") {
+		fileElement.classList.add("icon-folder");
+        
+		try {
+			size = await getFolderSize(fullPath);
+		} catch (error) {
+			fileElement.classList.add("icon-locked-folder");
+
+			console.error(`Failed to get size for ${fullPath}:`, error);
+			return;
+		}
+	} else {
+		fileElement.classList.add("icon-file");
+
+		try {
+			const stats = await Neutralino.filesystem.getStats(fullPath);
+			size = stats.size;
+		} catch (error) {
+			fileElement.classList.add("icon-locked-folder");
+
+			console.error(`Failed to get size for ${fullPath}:`, error);
+			return;
+		}
+	}
+
+	sizes.push(size);
+	calculateOffset();
+
+	// Update target Y position based on size
+	let targetY = (size - offset) * multiplier;
+
+	if (Number.isNaN(targetY)) {
+		targetY = 0;
+	}
+	fileElement.dataset.targetY = targetY;
 }
 
 function applyGravity(file, timestamp) {

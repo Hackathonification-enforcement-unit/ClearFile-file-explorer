@@ -3,8 +3,10 @@
   "version": "1.0.4",
   "main": "build-appimage.js",
   "scripts": {
-    "build": "npm run neu:build && npm run bundle:appimage",
-    "neu:build": "neu build",
+    "build:dev": "npm run neu:build:dev && npm run bundle:appimage",
+    "build:release": "npm run neu:build:release && npm run bundle:appimage",
+    "neu:build:dev": "neu build",
+    "neu:build:release": "neu build --release",
     "bundle:appimage": "node build-appimage.js"
   },
   "author": "",

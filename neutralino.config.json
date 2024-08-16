@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/neutralinojs/neutralinojs/main/schemas/neutralino.config.schema.json",
-  "applicationId": "js.neutralino.sample",
-  "version": "1.0.0",
+  "applicationId": "com.clearfile.explorer",
+  "version": "1.0.4",
   "defaultMode": "window",
   "port": 0,
   "documentRoot": "/resources/",
