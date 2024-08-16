@@ -22,8 +22,6 @@ async function getHome() {
     currentPath = await Neutralino.os.getEnv("HOME") || await Neutralino.os.getEnv("USERPROFILE");
 
     loadFilesFromDirectory(currentPath)
-
-    updatePath
 }
 
 function updatePath() {
@@ -73,11 +71,11 @@ async function createFileElement(entry, index, parentPath) {
 	const fileElement = document.createElement("div");
 	fileElement.className = "file";
 	fileElement.style.top = `${20 + index * 20}px`;
-	const minX = 0; // Minimum x position
+	const minX = 100; // Minimum x position
 	const maxX = container.clientWidth - fileElement.offsetWidth; // Maximum x position, considering the element's width
 
 	// Generate a random x position within the range
-	const randomX = Math.random() * (maxX - minX) + minX;
+	const randomX = Math.random() * (maxX - minX) + minX - 100;
 
 	// Apply the random x position to the element
 	fileElement.style.left = `${randomX}px`;
