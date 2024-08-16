@@ -30,7 +30,7 @@ Gravity File Browser is a [Neutralinojs](https://neutralino.js.org/) based file 
 ![image](https://github.com/user-attachments/assets/51aee534-3305-4922-99b5-364a3ac3edda)
 ![image](https://github.com/user-attachments/assets/b3994ff4-a6e4-41c2-878c-695594fc6092)
 ![image](https://github.com/user-attachments/assets/d586e2b2-2f92-476b-b91c-8ddac34dfcee)
-![image](https://stefdp.pics/r/W23FHdXixq2q.mp4)
+<video src="https://stefdp.pics/u/W23FHdXixq2q.mp4">
 </details>
 
 ## Credits
