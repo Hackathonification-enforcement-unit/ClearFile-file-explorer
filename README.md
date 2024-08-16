@@ -41,9 +41,15 @@ We're happy to announce that Gravity File Browser is now available for public us
 
 We've also provided prebuilt binaries for Windows, macOS, and Linux, since no one is gonna take their time to compile this. Just download the binary for your platform, extract it, and run the executable. It's that easy!
 
-* Windows: [`gravity-file-browser-win.zip`](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/release/ClearFile.file.explorer-win_x64.exe)
-* macOS: [`gravity-file-browser-mac.zip`](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/release/ClearFile.file.explorer-mac_universal)
-* Linux: [`gravity-file-browser-linux.zip`](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/release/ClearFile.file.explorer-linux_x64)
+* [Windows](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFile.file.explorer-win_x64.zip)
+* [Linux arm64](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFile.file.explorer-linux_arm64.zip)
+* [Linux armhf](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFile.file.explorer-linux_armhf.zip)
+* [Linux x64](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFile.file.explorer-linux_x64.zip)
+* [MacOS arm64](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFile.file.explorer-mac_arm64.zip)
+* [MacOS x64](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFile.file.explorer-mac_x64.zip)
+* [MacOS universal](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFile.file.explorer-mac_universal.zip)
+* [AppImage](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFileExplorer.AppImage)
+* [AppImage x86_64](https://github.com/Hackathonification-enforcement-unit/ClearFile-file-explorer/releases/download/latest/ClearFile_file_explorer-x86_64.AppImage)
 
 ---------------
 
