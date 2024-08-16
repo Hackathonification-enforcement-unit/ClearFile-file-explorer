@@ -18,12 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
 	loadFilesFromDirectory(currentPath); // Load da files when the app starts
 });
 
+async function getHome() {
+    currentPath = await Neutralino.os.getEnv("HOME") || await Neutralino.os.getEnv("USERPROFILE");
+
+    loadFilesFromDirectory(currentPath)
+
+    updatePath
+}
+
 function updatePath() {
 	const path = document.getElementById("path");
 	path.innerText = currentPath;
 }
 
-updatePath();
+getHome();
 
 async function loadFilesFromDirectory(path) {
 	currentPath = path;

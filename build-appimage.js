@@ -20,5 +20,4 @@ const bundler = new Bundler({
     version: '2.0.0'
 });
 
-// Bundle project
 bundler.bundle();
