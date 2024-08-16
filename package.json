@@ -3,11 +3,12 @@
   "version": "1.0.4",
   "main": "build-appimage.js",
   "scripts": {
-    "build:dev": "npm run neu:build:dev && npm run bundle:appimage",
-    "build:release": "npm run neu:build:release && npm run bundle:appimage",
+    "build:dev": "rm -r *.AppImage dist/ && npm run neu:build:dev && npm run bundle:zip && npm run bundle:appimage",
+    "build:release": "rm -r *.AppImage dist/ && npm run neu:build:release && npm run bundle:zip && npm run bundle:appimage",
     "neu:build:dev": "neu build",
     "neu:build:release": "neu build --release",
-    "bundle:appimage": "node build-appimage.js"
+    "bundle:appimage": "node build-appimage.js",
+    "bundle:zip": "chmod +x ./zip.sh && bash ./zip.sh"
   },
   "author": "",
   "license": "ISC",

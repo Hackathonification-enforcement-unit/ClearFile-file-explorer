@@ -12,14 +12,17 @@ let isDragging = false; // Chat, are we dragging rn?
 const oscillationFrequency = 0.005;
 const oscillationAmplitude = 5;
 
+let homeDir = NL_CWD;
 let currentPath = NL_CWD;
 
 document.addEventListener("DOMContentLoaded", () => {
-	loadFilesFromDirectory(currentPath); // Load da files when the app starts
+	getHome();
 });
 
 async function getHome() {
     currentPath = await Neutralino.os.getEnv("HOME") || await Neutralino.os.getEnv("USERPROFILE");
+
+	homeDir = currentPath
 
     loadFilesFromDirectory(currentPath)
 }
@@ -29,7 +32,7 @@ function updatePath() {
 	path.innerText = currentPath;
 }
 
-getHome();
+// getHome();
 
 async function loadFilesFromDirectory(path) {
 	currentPath = path;
@@ -279,7 +282,7 @@ Neutralino.events.on("windowClose", () => {
 });
 
 document.getElementById("homeBtn").addEventListener("click", () => {
-	loadFilesFromDirectory(NL_CWD);
+	loadFilesFromDirectory(homeDir);
 });
 
 document.getElementById("refreshBtn").addEventListener("click", async () => {
